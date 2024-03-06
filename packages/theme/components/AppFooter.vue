@@ -198,6 +198,10 @@ export default {
   background-color: #2F9393;
 }
 
+.sf-footer-column__title{
+  text-transform: capitalize;
+}
+
 .info-section{
   margin-top: 5rem;
   padding-bottom: 5rem !important;

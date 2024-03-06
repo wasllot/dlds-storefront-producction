@@ -664,6 +664,7 @@ export default {
   a{
     font-size: 25px;
     font-weight: 500;
+    text-transform: uppercase;
     @include for-desktop {
 
       padding-bottom: 2rem;
