@@ -122,7 +122,7 @@
               :image="productGetters.getCoverImage(product)"
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
-              :show-add-to-cart-button="false"
+              :show-add-to-cart-button="true"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="carousel__item__product"
               @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
@@ -472,6 +472,7 @@ export default {
       search: productsSearch,
       loading: productsLoading
     } = useProduct('relatedProducts');
+
 
     const { send: sendNotification } = useUiNotification();
     const { addItem: addItemToCart, isInCart } = useCart();
