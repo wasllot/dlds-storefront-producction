@@ -1,5 +1,6 @@
 <template>
   <div>
+  MIGUEL
     <LazyHydrate when-visible>
       <SfHero class="hero">
         <SfHeroItem
