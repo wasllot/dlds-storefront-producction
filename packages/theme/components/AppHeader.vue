@@ -106,6 +106,7 @@
       :visible="isSearchOpen"
       :result="result"
       :term="term"
+      :slug="term? term.replace(/\s/g, '-').toLowerCase(): term"
       @close="closeSearch"
       @removeSearchResults="removeSearchResults"
     />

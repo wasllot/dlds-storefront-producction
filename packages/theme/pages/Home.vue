@@ -94,14 +94,15 @@
 
       <LazyHydrate when-visible>
         <div class="similar-products">
-          <nuxt-link :to="localePath('/c/sustratos')" >
+          <nuxt-link :to="localePath('productos-rebajados')" >
             - Productos destacados - 
           </nuxt-link>
         </div>
       </LazyHydrate>
 
       <LazyHydrate when-visible>
-        <SfCarousel class="carousel" :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } } }">
+        <SfCarousel class="carousel" :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } }, hoverpause: true, autoplay: 8000, animationTimingFunc: 'ease-in-out',
+  animationDuration: 800 }">
           <template #prev="{go}">
             <SfArrow
               aria-label="prev"
@@ -116,7 +117,7 @@
               @click="go('next')"
             />
           </template>
-          <SfCarouselItem class="carousel__item" v-for="(product, i) in products" :key="i">
+          <SfCarouselItem class="carousel__item" v-for="(product, i) in featured" :key="i">
             <SfProductCard
               :title="productGetters.getName(product)"
               :image="productGetters.getCoverImage(product)"
@@ -128,6 +129,7 @@
               @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
             />
           </SfCarouselItem>
+          <div class="glide__bullets"></div>
         </SfCarousel>
       </LazyHydrate>
 
@@ -155,8 +157,8 @@
             </div>
           </div>
           <div class="carousel-counter-col">
-            <SfCarousel class="carousel" :settings="{ peek: 0,  perView: 1, breakpoints: { 1023: { peek: 0, perView: 1 } } }">
-              <SfCarouselItem class="carousel__item carousel-item-counter" v-for="(product, i) in products" :key="i">
+            <SfCarousel class="carousel" :settings="{ peek: 0,  perView: 1, breakpoints: { 1023: { peek: 0, perView: 1 } }, hoverpause: true, autoplay: 16000 }">
+              <SfCarouselItem class="carousel__item carousel-item-counter" v-for="(product, i) in featured" :key="i">
                 <div class="carousel-item-counter-image">
                   <img :src="productGetters.getCoverImage(product)"/>
                 </div>
@@ -245,14 +247,14 @@
       <br><br>
       <LazyHydrate when-visible>
         <div class="similar-products">
-          <nuxt-link :to="localePath('productos-rebajados')" >
+          <nuxt-link :to="localePath('productos-nuevos')" >
             - Los más vendidos -
           </nuxt-link>
         </div>
       </LazyHydrate>
 
       <LazyHydrate when-visible>
-        <SfCarousel class="carousel" :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } } }">
+        <SfCarousel class="carousel" :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } }, hoverpause: true, autoplay: 8000}">
           <template #prev="{go}">
             <SfArrow
               aria-label="prev"
@@ -267,7 +269,7 @@
               @click="go('next')"
             />
           </template>
-          <SfCarouselItem class="carousel__item" v-for="(product, i) in products" :key="i" style="margin-right: 10px;">
+          <SfCarouselItem class="carousel__item" v-for="(product, i) in bestSelling" :key="i" style="margin-right: 10px;">
             <SfProductCard
               :title="productGetters.getName(product)"
               :image="productGetters.getCoverImage(product)"
@@ -302,7 +304,7 @@ import {
   SfArrow,
   SfButton
 } from '@storefront-ui/vue';
-import { ref, useContext } from '@nuxtjs/composition-api';
+import { ref, useContext, onMounted } from '@nuxtjs/composition-api';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import NewsletterModal from '~/components/NewsletterModal.vue';
 import OffersCounter from '~/components/OffersCounter.vue';
@@ -311,78 +313,26 @@ import { useUiState } from '../composables';
 import cacheControl from './../helpers/cacheControl';
 import { onSSR, addBasePath } from '@vue-storefront/core';
 import { computed } from '@nuxtjs/composition-api';
-import { useUiNotification } from '~/composables';
+import { useUiNotification, useUiHelpers } from '~/composables';
+import debounce from 'lodash.debounce';
 
 import {
   useProduct,
   productGetters,
   useCart,
-  useUser
+  useUser,
+  useFacet,
+  facetGetters
 } from '@vue-storefront/prestashop';
 
 export default {
   name: 'Home',
   setup() {
+    const th = useUiHelpers();
     const { $config } = useContext();
     const { toggleNewsletterModal } = useUiState();
-    const products = ref([
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: true
-      },
-      {
-        title: 'Cream Beach Bag 2',
-        image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag 3',
-        image: addBasePath('/homepage/productC.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag RR',
-        image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productC.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      }
-    ]);
+    const term = ref(null);
+    const pagination = ref(null);
     const heroes = [
       {
         title: '',
@@ -457,6 +407,8 @@ export default {
     ];
     
     const { isAuthenticated } = useUser();
+    const { result: productResult, search: productSearch, loading } = useFacet();
+    const result = ref(null);
 
     const onSubscribe = (emailAddress) => {
       console.log(`Email ${emailAddress} was added to newsletter.`);
@@ -467,19 +419,60 @@ export default {
       products.value[index].isInWishlist = !products.value[index].isInWishlist;
     };
 
-    const {
-      products: featureProducts,
-      search: productsSearch,
-      loading: productsLoading
-    } = useProduct('relatedProducts');
+    // const {
+    //   products: featureProducts,
+    //   search: productsSearch,
+    //   loading: productsLoading
+    // } = featureProducts('relatedProducts');
+
 
 
     const { send: sendNotification } = useUiNotification();
     const { addItem: addItemToCart, isInCart } = useCart();
 
     onSSR(async () => {
-      await productsSearch({ featured: true });
+      // await productsSearch({ featured: true });
+
+      await productSearch({ 
+        type: 'featured',
+        resultsPerPage: 20,
+        featured: true,
+        bestSelling: true
+      });
+
+      result.value = facetGetters.getFeaturedProducts(productResult.value);
+
+      console.log(productResult.value);
+
     });
+
+    onMounted(() => {
+    // context.root.$scrollTo(context.root.$el, 2000);
+    loadProducts('PAPELILLOS');
+    });
+
+    const loadProducts = debounce(async (paramValue) => {
+
+      console.log(th.getFacetsFromURL());
+
+      if (!paramValue.target) {
+        term.value = paramValue;
+      } else {
+        term.value = paramValue.target.value;
+      }
+
+      await productSearch({ 
+        type: 'featured',
+        resultsPerPage: 20,
+        featured: true,
+        bestSelling: true
+      });
+
+      result.value = facetGetters.getFeaturedProducts(productResult.value);
+
+      console.log(productResult.value);
+
+    }, 200);
 
     const timer = () => {
 
@@ -532,17 +525,29 @@ export default {
       isInCart,
       addItemToCart,
       productGetters,
-      productsLoading,
       products: computed(() =>
-        productGetters.getFeaturedProductsFiltered(featureProducts.value)
+        facetGetters.getFeaturedProducts(productResult.value)
       ),
+      featured: computed(() =>
+        facetGetters.getFeaturedProducts(productResult.value)
+      ),
+      bestSelling: computed(() =>
+        facetGetters.getBestSellingProducts(productResult.value)
+      ),
+      pagination: computed(() => 
+        facetGetters.getPagination(productResult.value)
+        ),
       toggleWishlist,
       toggleNewsletterModal,
       onSubscribe,
       addBasePath,
       banners,
       heroes,
-      timer
+      timer,
+      result,
+      loadProducts,
+      term,
+      pagination
     };
   },
   methods: {

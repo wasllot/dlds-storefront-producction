@@ -103,6 +103,23 @@ function getProducts(psdata: any): PsProduct[] {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
+function getFeaturedProducts(psdata: any): PsProduct[] {
+  if (!psdata.data) {
+    return [];
+  }
+  const products = Array.isArray(psdata.data.featured_products) ? psdata.data.featured_products : [psdata.data.products];
+  return populateCategoryProducts(products);
+}
+
+function getBestSellingProducts(psdata: any): PsProduct[] {
+  if (!psdata.data) {
+    return [];
+  }
+  const products = Array.isArray(psdata.data.best_selling) ? psdata.data.best_selling : [psdata.data.products];
+  return populateCategoryProducts(products);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
 function getPagination(searchResult): AgnosticPagination {
   if (!searchResult.data) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -130,6 +147,8 @@ export const facetGetters: FacetsGetters<Facet, PsProduct[], FacetSearchCriteria
   getGrouped,
   getAll,
   getProducts,
+  getFeaturedProducts,
+  getBestSellingProducts,
   getCategoryTree,
   getCategoryTreeGeneral,
   getBreadcrumbs,

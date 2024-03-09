@@ -251,6 +251,7 @@
       const result = ref(null);
 
       const productsQuantity = ref({});
+      
       const products = computed(() => facetGetters.getProducts(productResult.value));
       const categoryTree = computed(() => facetGetters.getCategoryTree(productResult.value));
       const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(productResult.value));
@@ -279,7 +280,13 @@
       };
   
     onSSR(async () => {
-    loadProducts('PAPELILLOS');
+      await productSearch({
+        type: 'latest-products',
+        term: 'productos-nuevos',
+        page: th.getFacetsFromURL().page
+      });
+
+      result.value = facetGetters.getProducts(productResult.value);
     });
 
     const { changeFilters, isFacetColor } = useUiHelpers();

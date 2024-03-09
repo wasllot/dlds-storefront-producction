@@ -7,14 +7,15 @@
     >
       <transition name="sf-fade" mode="out-in">
         <div v-if="products && products.length > 0" class="search__wrapper-results" key="results">
-          <SfMegaMenuColumn title="Productos encontrados" class="sf-mega-menu-column--pined-content-on-mobile search__results">
-            <template #title="{title}">
+          <SfMegaMenuColumn :title="'Productos encontrados para ' +term" @click="viewAllSearchResults(term)" class="sf-mega-menu-column--pined-content-on-mobile search__results">
+            <template #title="{title}"> 
               <SfMenuItem :label="title" class="sf-mega-menu-column__header search__header">
                 <template #mobile-nav-icon>
                   &#8203;
                 </template>
               </SfMenuItem>
             </template>
+            <nuxt-link :to="localePath('/resultados/'+slug)" class="sf-button--pure sf-header__action ver-todos">Ver todos los resultados</nuxt-link>
             <SfScrollable class="results--desktop desktop-only" show-text="" hide-text="">
               <div class="results-listing">
                 <SfProductCard
@@ -52,7 +53,7 @@
         </div>
         <div v-else key="no-results" class="before-results">
           <template v-if="term">
-            <p class="before-results__paragraph">No se han encontrado productos</p>
+            <p class="before-results__paragraph">No se han encontrado productos para {{ term }}</p>
           </template>
           <template v-else>
             <p class="before-results__paragraph">Aún no has buscado nada. Ingresa algo en el buscador</p>
@@ -74,9 +75,10 @@ import {
   SfButton,
   SfImage
 } from '@storefront-ui/vue';
-import { ref, watch, computed } from '@nuxtjs/composition-api';
+import { ref, watch, computed, useRouter } from '@nuxtjs/composition-api';
 import { productGetters } from '@vue-storefront/prestashop';
 import { addBasePath } from '@vue-storefront/core';
+
 
 export default {
   name: 'SearchResults',
@@ -88,7 +90,8 @@ export default {
     SfScrollable,
     SfMenuItem,
     SfButton,
-    SfImage
+    SfImage,
+    useRouter
   },
   props: {
     visible: {
@@ -101,11 +104,17 @@ export default {
     term: {
       type: String,
       default: ''
+    },
+    slug: {
+      type: String,
+      default: ''
     }
   },
   setup(props, { emit }) {
     const isSearchOpen = ref(props.visible);
     const products = computed(() => props.result);
+    const router = useRouter();
+
 
     watch(() => props.visible, (newVal) => {
       isSearchOpen.value = newVal;
@@ -117,11 +126,18 @@ export default {
       }
     });
 
+    const viewAllSearchResults = (searchValue) => {
+      console.log(searchValue);
+      // router.push('/resultados/'+searchValue);
+    }
+
     return {
       isSearchOpen,
       productGetters,
       products,
-      addBasePath
+      viewAllSearchResults,
+      addBasePath,
+      router
     };
   }
 };
@@ -162,6 +178,7 @@ export default {
     display: none;
     @include for-desktop {
       display: flex;
+      margin-bottom: 10px;
     }
   }
 }
@@ -233,5 +250,9 @@ export default {
     margin: var(--spacer-xl) auto;
     width: 100%;
   }
+}
+
+.ver-todos{
+  margin-left: 20px;
 }
 </style>

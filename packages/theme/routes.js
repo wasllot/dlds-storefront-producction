@@ -17,6 +17,11 @@ export function getRoutes(themeDir = __dirname) {
     component: path.resolve(themeDir, 'pages/Category.vue')
   },
   {
+    name: 'search',
+    path: '/resultados/:slug_1/',
+    component: path.resolve(themeDir, 'pages/ResultadosBusqueda.vue')
+  },
+  {
     name: 'productos-rebajados',
     path: '/productos-rebajados',
     component: path.resolve(themeDir, 'pages/ProductosRebajados.vue')
@@ -43,22 +48,22 @@ export function getRoutes(themeDir = __dirname) {
   },
   {
     name: 'registration',
-    path: '/registration',
+    path: '/registro',
     component: path.resolve(themeDir, 'pages/Register.vue')
   },
   {
     name: 'login',
-    path: '/login',
+    path: '/ingresar',
     component: path.resolve(themeDir, 'pages/Login.vue')
   },
   {
     name: 'categories',
-    path: '/categories',
+    path: '/categorias',
     component: path.resolve(themeDir, 'pages/Categories.vue')
   },
   {
     name: 'cart',
-    path: '/cart',
+    path: '/carrito',
     component: path.resolve(themeDir, 'pages/cartPage.vue')
   },
   {

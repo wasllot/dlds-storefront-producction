@@ -408,4 +408,9 @@ img{
 #checkout .sf-button{
   background: #0caa91;
 }
+
+.topbar .sf-carousel__controls{
+  display: none;
+}
+
 </style>

@@ -3,8 +3,9 @@
 
     <template class="slider" style="width: 100% !important">
       <LazyHydrate when-visible>
-      <SfCarousel class="carousel" :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 3 } } }">
-        <template #prev="{go}">
+      <SfCarousel class="carousel glide__arrow--disabled" :settings="{type:'carousel', rewind: 1, peek: 16, breakpoints: { 1023: { peek: 0, perView: 1 } }, hoverpause: true, autoplay: 1, perTouch:1,  animationTimingFunc: 'ease-in-out',
+  animationDuration: 16000, slidePerPage: true}">
+        <!-- <template #prev="{go}">
           <SfArrow
             aria-label="prev"
             class="sf-arrow--left sf-arrow--long"
@@ -17,7 +18,7 @@
             class="sf-arrow--right sf-arrow--long"
             @click="go('next')"
           />
-        </template>
+        </template> -->
         <SfCarouselItem class="carousel__item">
           <span>Descuentos sobre descuentos</span>
         </SfCarouselItem>
@@ -30,6 +31,45 @@
         </SfCarouselItem>
         <SfCarouselItem class="carousel__item">
           <span>Despachos a todo chile</span>
+        </SfCarouselItem>
+        
+        <SfCarouselItem class="carousel__item">
+          <span>Promociones</span>
+        </SfCarouselItem>
+        <SfCarouselItem class="carousel__item">
+          <span>Mayoristas</span>
+        </SfCarouselItem>
+        <SfCarouselItem class="carousel__item">
+          <span>Despachos a todo chile</span>
+        </SfCarouselItem>
+        <SfCarouselItem class="carousel__item">
+          <span>Descuentos sobre descuentos</span>
+        </SfCarouselItem>
+
+        <SfCarouselItem class="carousel__item">
+          <span>Mayoristas</span>
+        </SfCarouselItem>
+        <SfCarouselItem class="carousel__item">
+          <span>Despachos a todo chile</span>
+        </SfCarouselItem>
+        <SfCarouselItem class="carousel__item">
+          <span>Descuentos sobre descuentos</span>
+        </SfCarouselItem>
+        <SfCarouselItem class="carousel__item">
+          <span>Promociones</span>
+        </SfCarouselItem>
+        
+        <SfCarouselItem class="carousel__item">
+          <span>Despachos a todo chile</span>
+        </SfCarouselItem>
+        <SfCarouselItem class="carousel__item">
+          <span>Descuentos sobre descuentos</span>
+        </SfCarouselItem>
+        <SfCarouselItem class="carousel__item">
+          <span>Promociones</span>
+        </SfCarouselItem>
+        <SfCarouselItem class="carousel__item">
+          <span>Mayoristas</span>
         </SfCarouselItem>
       </SfCarousel>
     </LazyHydrate>
@@ -100,6 +140,10 @@ export default {
 .carousel__item li{
   border-left: 5px solid #000;
   height: 5px;
+}
+
+.sf-carousel__controls{
+  display: none;
 }
 
 
