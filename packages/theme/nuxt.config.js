@@ -8,6 +8,9 @@ export default {
     port: 3000,
     host: '0.0.0.0'
   },
+  api: {
+    baseURL: 'https://front.dlds.cl'
+  },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -177,6 +180,7 @@ export default {
   },
   publicRuntimeConfig: {
     theme,
+    // middlewareUrl: 'https://front.dlds.cl/api/',
     psCustomerCookieKey: 'ps-customer-cookie-key',
     psCustomerCookieValue: 'ps-customer-cookie-value'
   },
