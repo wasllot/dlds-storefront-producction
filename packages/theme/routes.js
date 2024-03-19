@@ -17,6 +17,11 @@ export function getRoutes(themeDir = __dirname) {
     component: path.resolve(themeDir, 'pages/Category.vue')
   },
   {
+    name: 'brand',
+    path: '/marcas/:slug_1/',
+    component: path.resolve(themeDir, 'pages/Brand.vue')
+  },
+  {
     name: 'search',
     path: '/resultados/:slug_1/',
     component: path.resolve(themeDir, 'pages/ResultadosBusqueda.vue')
@@ -32,6 +37,11 @@ export function getRoutes(themeDir = __dirname) {
     component: path.resolve(themeDir, 'pages/ProductosNuevos.vue')
   },
   {
+    name: 'brands',
+    path: '/marcas',
+    component: path.resolve(themeDir, 'pages/Brand.vue')
+  },
+  {
     name: 'my-account',
     path: '/my-account/:pageName?',
     component: path.resolve(themeDir, 'pages/MyAccount.vue')
@@ -40,6 +50,11 @@ export function getRoutes(themeDir = __dirname) {
     name: 'nosotros',
     path: '/nosotros',
     component: path.resolve(themeDir, 'pages/Nosotros.vue')
+  },
+  {
+    name: 'contacto',
+    path: '/contacto',
+    component: path.resolve(themeDir, 'pages/Contacto.vue')
   },
   {
     name: 'como-comprar',

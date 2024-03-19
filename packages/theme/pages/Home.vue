@@ -121,11 +121,12 @@
             <SfProductCard
               :title="productGetters.getName(product)"
               :image="productGetters.getCoverImage(product)"
-              :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
-              :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
+              :regular-price="$n(product.regularPrice, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
+              :special-price="$n(productGetters.getPrice(product).regular, 'currencyNoCents', 'cl') === $n(productGetters.getPrice(product).special, 'currencyNoCents', 'cl')? '': $n(productGetters.getPrice(product).special, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
               :show-add-to-cart-button="true"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="carousel__item__product"
+              :badgeLabel="product.percentage?product.percentage+'%':''"
               @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
             />
           </SfCarouselItem>
@@ -240,7 +241,7 @@
       </LazyHydrate>
 
       <LazyHydrate when-visible>
-        <nuxt-link :to="localePath({ name: 'home' })" class="bold"><img loading="lazy" src="/homepage/marcas.png" srcset="" sizes=""  class="sf-image-loaded" style="height: auto !important; width: 100% !important">
+        <nuxt-link :to="localePath({ name: 'brands' })" class="bold"><img loading="lazy" src="/homepage/marcas.png" srcset="" sizes=""  class="sf-image-loaded" style="height: auto !important; width: 100% !important">
               </nuxt-link>
       </LazyHydrate>
 
@@ -273,11 +274,12 @@
             <SfProductCard
               :title="productGetters.getName(product)"
               :image="productGetters.getCoverImage(product)"
-              :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
-              :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
+              :regular-price="$n(product.regularPrice, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
+              :special-price="$n(productGetters.getPrice(product).regular, 'currencyNoCents', 'cl') === $n(productGetters.getPrice(product).special, 'currencyNoCents', 'cl')? '': $n(productGetters.getPrice(product).special, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
               :show-add-to-cart-button="true"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="carousel__item__product"
+              :badgeLabel="product.percentage?product.percentage+'%':''"
               @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
             />
           </SfCarouselItem>

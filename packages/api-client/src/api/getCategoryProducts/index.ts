@@ -6,8 +6,9 @@ export default async function getCategoryProducts(context, params) {
     const url = new URL(context.config.api.url + params.lang + '/rest/productSearch');
     url.searchParams.set('iso_currency', params.currency);
     url.searchParams.set('s', params.input.term);
-    url.searchParams.set('resultsPerPage', '20');
-
+    url.searchParams.set('resultsPerPage', '10');
+    url.searchParams.set('page', params.input.page);
+    url.searchParams.set('tipo', 'instant');
 
     const { data } = await context.client.get(url.href);
     return data;
@@ -16,7 +17,8 @@ export default async function getCategoryProducts(context, params) {
     const url = new URL(context.config.api.url + params.lang + '/rest/productSearch');
     url.searchParams.set('iso_currency', params.currency);
     url.searchParams.set('s', params.input.term);
-    url.searchParams.set('resultsPerPage', '20');
+    url.searchParams.set('page', params.input.page);
+    url.searchParams.set('resultsPerPage', '10');
 
 
     const { data } = await context.client.get(url.href);
@@ -52,6 +54,20 @@ export default async function getCategoryProducts(context, params) {
     const { data } = await context.client.get(url.href);
     return data;
 
+  }else if(params.input.type && params.input.type === 'brands') {
+    const url = new URL(context.config.api.url + params.lang + '/rest/brandProducts');
+    url.searchParams.set('iso_currency', params.currency);
+    const facetsUrl = facetParams(params.input.filters);
+
+    url.searchParams.set('slug', params.input.slug);
+    url.searchParams.set('q', facetsUrl);
+    url.searchParams.set('page', params.input.page);
+    url.searchParams.set('with_all_images', '1');
+    url.searchParams.set('with_category_tree', '1');
+    url.searchParams.set('resultsPerPage', params.input.resultsPerPage?params.input.resultsPerPage:'');
+
+    const { data } = await context.client.get(url.href);
+    return data;
   }else {
     const url = new URL(context.config.api.url + params.lang + '/rest/categoryProducts');
     url.searchParams.set('iso_currency', params.currency);

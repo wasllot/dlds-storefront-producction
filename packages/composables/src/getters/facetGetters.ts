@@ -11,6 +11,7 @@ import {
 import type { PsProduct, Facet, FacetSearchCriteria } from '@vue-storefront/prestashop-api';
 import { populateCategoryProducts } from '../helpers';
 import { populateCategoryTree } from '../helpers';
+import { populateBrandTree } from '../helpers';
 import { populateCategoryTreeGeneral } from '../helpers';
 
 
@@ -83,6 +84,16 @@ function getCategoryTree(psdata: any): AgnosticCategoryTree {
   return populateCategoryTree(psdata.data.categories);
 }
 
+function getBrandTree(psdata: any): AgnosticCategoryTree{
+
+  if (!psdata.data) {
+    return {isCurrent: false, items: [], label: ''};
+  }
+
+  return populateBrandTree(psdata.data.brands);
+
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function getCategoryTreeGeneral(psdata: any): AgnosticCategoryTree {
 
@@ -150,6 +161,7 @@ export const facetGetters: FacetsGetters<Facet, PsProduct[], FacetSearchCriteria
   getFeaturedProducts,
   getBestSellingProducts,
   getCategoryTree,
+  getBrandTree,
   getCategoryTreeGeneral,
   getBreadcrumbs,
   getPagination

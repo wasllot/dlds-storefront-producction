@@ -22,12 +22,14 @@
                   v-for="(product, index) in products"
                   :key="index"
                   class="result-card"
-                  :regular-price="$n(product.regularPrice, 'currencyNoCents', 'cl').replace('CLP', '$')"
+                  :regular-price="$n(product.regularPrice, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
+                  :special-price="productGetters.getPrice(product).regular == productGetters.getPrice(product).special? '': productGetters.getPrice(product).special == 0?'': $n(productGetters.getPrice(product).special, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
                   :score-rating="productGetters.getAverageRating(product)"
                   :reviews-count="7"
                   :image="addBasePath(productGetters.getCoverImage(product))"
                   :alt="productGetters.getName(product)"
                   :title="productGetters.getName(product)"
+                  :badgeLabel="product.percentage?product.percentage+'%':''"
                   :link="`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`"
                 />
               </div>
@@ -37,12 +39,14 @@
                 v-for="(product, index) in products"
                 :key="index"
                 class="result-card"
-                :regular-price="$n(product.regularPrice, 'currencyNoCents', 'cl').replace('CLP', '$')"
+                :regular-price="$n(product.regularPrice, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
+                :special-price="productGetters.getPrice(product).regular == productGetters.getPrice(product).special? '': productGetters.getPrice(product).special == 0?'': $n(productGetters.getPrice(product).special, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
                 :score-rating="productGetters.getAverageRating(product)"
                 :reviews-count="7"
                 :image="addBasePath(productGetters.getCoverImage(product))"
                 :alt="productGetters.getName(product)"
                 :title="productGetters.getName(product)"
+                :badgeLabel="product.percentage?product.percentage+'%':''"
                 :link="`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`"
               />
             </div>

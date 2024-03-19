@@ -5,18 +5,19 @@ const populateCategoryProducts = (psProducts: Array<any>) => {
     name: product.name,
     slug: product.link_rewrite,
     regularPrice: product.regular_price_amount?product.regular_price_amount:product.price,
-    discountPrice: product.price_amount? product.price_amount:product.price_drop,
+    discountPrice: product.price_drop == 'null'? 0:product.price_drop,
     coverImageSmall: product.cover,
     coverImageMedium: product.cover,
     coverImageLarge: product.cover,
     images: [],
     description: null,
     shortDescription: null,
-    brand: null,
+    brand: product.brand_name,
     category: null,
     productInfo: null,
     quantity: product.quantity,
-    cover: product.cover
+    cover: product.cover,
+    percentage: product.reduction? product.reduction: ''
   }));
 };
 

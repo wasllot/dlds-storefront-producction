@@ -180,7 +180,7 @@ export default {
   },
   publicRuntimeConfig: {
     theme,
-    // middlewareUrl: 'https://front.dlds.cl/api/',
+    // middlewareUrl: 'https://inspiring-bavarois-b79b58.netlify.app/api/',
     psCustomerCookieKey: 'ps-customer-cookie-key',
     psCustomerCookieValue: 'ps-customer-cookie-value'
   },

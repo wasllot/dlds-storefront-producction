@@ -208,9 +208,11 @@ export default {
         term.value = paramValue.target.value;
       }
 
+
       await productSearch({
         type: 'instant-search',
-        term: term.value
+        term: term.value,
+        page: 1
       });
 
       result.value = facetGetters.getProducts(productResult.value);

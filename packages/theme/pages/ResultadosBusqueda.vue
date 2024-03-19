@@ -1,6 +1,7 @@
 <template>
 
-  <div>
+
+  <div class="products-page">
     <!-- <div class="navbar section">
       <div class="navbar__aside desktop-only">
         <LazyHydrate never>
@@ -39,6 +40,9 @@
                       v-for="(cat, i) in categoryTree && categoryTree.items"
                       :key="i"
                       :header="cat.label"
+                      :class="'image-'+cat.label.toLowerCase()"
+                      :img="cat.label.toLowerCase() == 'grow'? '/icons/SVG/categorias/grow.svg': cat.label.toLowerCase() == 'smoke'? '/icons/SVG/categorias/smoke.svg': cat.label.toLowerCase() == 'semillas'? '/icons/SVG/categorias/semillas.svg':cat.label.toLowerCase() == 'extractores'? '/icons/SVG/categorias/extraccion.svg':cat.label.toLowerCase() == 'tabaqueria'? '/icons/SVG/categorias/tabaqueria.svg': ''"
+                    
                       >
                       <template>
                           <SfList class="list">
@@ -102,14 +106,15 @@
                 :style="{ '--index': i }"
                 :title="productGetters.getName(product)"
                 :image="product.coverImageLarge"
-                :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
-                :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
+                :regular-price="$n(product.regularPrice, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
+                :special-price="productGetters.getPrice(product).regular == productGetters.getPrice(product).special? '': productGetters.getPrice(product).special == 0?'': $n(productGetters.getPrice(product).special, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
                 :max-rating="5"
                 :score-rating="productGetters.getAverageRating(product)"
                 :show-add-to-cart-button="true"
                 :is-in-wishlist="isInWishlist({ product })"
                 :is-added-to-cart="isInCart({ product })"
                 :link="localePath(`/p/${productGetters.getId(product)}/${product.slug}`)"
+                :badgeLabel="product.percentage?product.percentage+'%':''"
                 class="products__product-card"
                 @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
                 @click:add-to-cart="HandleAddToCart({ product, quantity: 1 })"
@@ -167,7 +172,7 @@
             <LazyHydrate on-interaction>
               <SfPagination
                 v-if="!loading"
-                class="products__pagination desktop-only"
+                class="products__pagination"
                 v-show="pagination.totalPages > 1"
                 :current="pagination.currentPage"
                 :total="pagination.totalPages"
@@ -177,17 +182,50 @@
 
           </div>
         </SfLoader>
-      </div>
-      <LazyHydrate when-visible>
-          <div class="similar-products">
-            <SfHeading title="- Marcas exclusivas - " :level="2"/>
-          </div>
-        </LazyHydrate>
+      </div> 
+    </div>
 
-        <LazyHydrate when-visible>
-          <nuxt-link :to="localePath({ name: 'home' })" class="bold"><img loading="lazy" src="/homepage/marcas.png" srcset="" sizes=""  class="sf-image-loaded" style="height: auto !important; width: 100% !important">
-                </nuxt-link>
-        </LazyHydrate>
+    <div id="related">
+
+      <LazyHydrate when-visible>
+        <div class="similar-products">
+          <SfHeading title="- Podría interesarte - " :level="2"/>
+        </div>
+      </LazyHydrate>
+
+      <LazyHydrate when-visible>
+        <SfCarousel class="carousel" :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } } }">
+          <template #prev="{go}">
+            <SfArrow
+              aria-label="prev"
+              class="sf-arrow--left sf-arrow--long"
+              @click="go('prev')"
+            />
+          </template>
+          <template #next="{go}">
+            <SfArrow
+              aria-label="next"
+              class="sf-arrow--right sf-arrow--long"
+              @click="go('next')"
+            />
+          </template>
+          <SfCarouselItem class="carousel__item" v-for="(product, i) in featured" :key="i" style="margin-right: 10px;">
+            <SfProductCard
+              :title="productGetters.getName(product)"
+              :image="productGetters.getCoverImage(product)"
+              :regular-price="$n(product.regularPrice, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
+              :special-price="$n(productGetters.getPrice(product).regular, 'currencyNoCents', 'cl') === $n(productGetters.getPrice(product).special, 'currencyNoCents', 'cl')? '': $n(productGetters.getPrice(product).special, 'currencyNoCents', 'cl').replace('CLP', '$').replace(',', '.')"
+              :show-add-to-cart-button="true"
+              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+              class="carousel__item__product"
+              :badgeLabel="product.percentage?product.percentage+'%':''"
+              @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
+            />
+          </SfCarouselItem>
+        </SfCarousel>
+      </LazyHydrate>
+
+
     </div>
 
   </div>
@@ -212,7 +250,9 @@ import {
   SfBreadcrumbs,
   SfLoader,
   SfColor,
-  SfProperty
+  SfProperty,
+  SfCarousel,
+  SfArrow
 } from '@storefront-ui/vue';
 import { computed, ref, onMounted } from '@nuxtjs/composition-api';
 import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters } from '@vue-storefront/prestashop';
@@ -337,7 +377,10 @@ export default {
       selectedFilters,
       clearFilters,
       applyFilters,
-      addBasePath
+      addBasePath,
+      featured: computed(() =>
+        facetGetters.getFeaturedProducts(productResult.value)
+      ),
     };
   },
   methods: {
@@ -371,7 +414,9 @@ export default {
     SfColor,
     SfHeading,
     SfProperty,
-    LazyHydrate
+    LazyHydrate,
+    SfCarousel,
+    SfArrow
   }
 };
 </script>
@@ -544,25 +589,33 @@ export default {
   padding: 1rem 0.5rem;
 }
 
-.similar-products {
+#category .similar-products {
   display: flex;
   justify-content: center;
   align-items: center;
   padding-bottom: var(--spacer-2xs);
   padding-top: 3rem;
   --heading-padding: 0;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+
   border-bottom: 1px var(--c-light) solid;
   @include for-desktop {
     border-bottom: 0;
     justify-content: center;
     padding-bottom: 0;
   }
+
+  h2{
+    color: #808080;
+    font-weight: 500;
+  }
 }
 
 #category .sidebar{
     padding: 0px;
     border-radius: 5px;
-    border: 1px solid #eaeaea;
+    border: 1px solid #333333;
     margin-top: 10px;
   }
 

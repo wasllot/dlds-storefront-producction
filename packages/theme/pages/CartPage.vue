@@ -74,7 +74,7 @@
             <span><img src="/icons/cupon.svg" alt=""/>Ingresa tu código promocional</span>
             <div class="coupon-code-input">
               <form action="">
-                <input type="text" name="" id="">
+                <input type="text" name="discount_name" id="">
                 <input type="submit" value="APLICAR">
               </form>
             </div>

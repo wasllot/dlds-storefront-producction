@@ -28,7 +28,7 @@
           </nuxt-link>
           
           <div class="separator"></div>
-          <nuxt-link :to="localePath({ name: 'home' })" class="">
+          <nuxt-link :to="localePath({ name: 'contacto' })" class="">
             Contacto
           </nuxt-link>
           
